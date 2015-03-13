@@ -24,8 +24,8 @@ pub fn JS_WrapPropertyDescriptor(cx: *mut JSContext,
 //pub type JSJitInfo = JSJitInfo_struct;
 
 pub mod bindgen {
-    use jsapi::{JSContext, JSObject, JSClass, JSRuntime};
-    use libc::{uintptr_t, int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, c_float, c_double};
+    use jsapi::{JSContext, JSObject, JSClass, JSRuntime, JSNative, JSFunction, JSRawObject, JSVal};
+    use libc::{uintptr_t, int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t, c_float, c_double, c_char, c_uint, size_t};
 
     extern {
         pub fn JS_NewObjectWithUniqueType(cx: *mut JSContext, clasp: *const JSClass,
@@ -58,5 +58,9 @@ pub mod bindgen {
 
         pub fn JS_NewFloat64Array(cx: *mut JSContext, nelements: uint32_t) -> *mut JSObject;
         pub fn JS_GetFloat64ArrayData(obj: *mut JSObject, cx: *mut JSContext) -> *mut c_double;
+
+        pub fn NewFunctionWithReserved(cx: *mut JSContext, native: JSNative, nargs: c_uint, flags: c_uint, parent: *const JSObject, name: *const c_char) -> *mut JSFunction;
+        pub fn GetFunctionNativeReserved(fun: JSRawObject, which: size_t) -> *const JSVal;
+        pub fn SetFunctionNativeReserved(fun: JSRawObject, which: size_t, val: *const JSVal) -> ();
     }
 }
